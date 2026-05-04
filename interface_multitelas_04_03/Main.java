@@ -31,13 +31,15 @@ public class Main extends JFrame{
     }
 
     public JMenuItem getMenuCadastrarAluno() {
-        JMenuItem menuCadastrarAluno = JMenuItem("Aluno");
+        JMenuItem menuCadastrarAluno = new JMenuItem("Aluno");
         menuCadastrarAluno.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evento) {
                 ViewCrudAluno viewCrudAluno = new ViewCrudAluno(1000, 1000);
                 viewCrudAluno.setVizible(true);
             }
         });
+
+        return menuCadastrarAluno;
     }
 
 
@@ -51,7 +53,7 @@ public class Main extends JFrame{
         return menuAjuda;
     }
 
-    public void addComponents() throws Exception{
+    public void addComponents(){
         try {
             JMenuBar menuPrincipal = new JMenuBar();
             JMenu menuCadastrar = this.getMenuCadastrar(); 
@@ -60,7 +62,7 @@ public class Main extends JFrame{
             menuPrincipal.add(menuAjuda);
         }
         catch(Exception e) {
-            
+            System.out.println("Erro ao adicionar componentes: " + e.getMessage());
         }
     }
 
