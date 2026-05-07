@@ -1,3 +1,7 @@
+package src.frontend.views;
+
+import src.frontend.client.ClientHttp;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

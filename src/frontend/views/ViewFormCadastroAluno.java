@@ -1,4 +1,4 @@
-package interface_multitelas_04_03;
+package src.frontend.views;
 
 import javax.swing.*;
 import java.awt.*;

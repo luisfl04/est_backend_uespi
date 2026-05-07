@@ -1,4 +1,4 @@
-package interface_multitelas_04_03;
+package src.frontend.views;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
