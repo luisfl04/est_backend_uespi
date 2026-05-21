@@ -1,0 +1,19 @@
+ - Atores: Alunos, Coordenadores, Professores
+ 
+ - Requisitos:
+ 	- O usuário deve fazer login com credências que o identificam verdadeiramente como aluno
+ 	- O usuário terá suas funcionalidades visíveis com base no seu tipo de usuário
+ 	- O usuário cadastrará informações de perfil, onde outros usuários verão estas informações.
+ 	- Em relação a perfil, de acordo com seu tipo de usuário, o usuário poderá cadastrar os seguintes tipos de posts:
+ 		- Para alunos:
+ 			- Mensagem informativa(Post)
+ 			- Eventos relacionados a àrea
+ 			- Grupos de discussão e estudos
+ 			- Noticias
+ 		- Para professores:
+ 			- Todos que Aluno pode cadastrar
+ 			- Projetos de pesquisa
+ 			- Monitoria
+ 		- Para coordenadores:
+ 			- Todos os tipos de posts.
+ 
