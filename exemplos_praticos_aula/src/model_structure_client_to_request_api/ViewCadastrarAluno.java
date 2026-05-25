@@ -1,3 +1,5 @@
+package model_structure_client_to_request_api;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,9 +42,9 @@ public class ViewCadastrarAluno extends JFrame{
             public void actionPerformed(ActionEvent evento){
                 if(evento.getSource() == cadastrar) {
                     try {
-                        AlunoJson JSON = new AlunoJson(tnome.getText(), ttelefone.getText(), temail.getText(), "colocar matricula aqui");
+                        AlunoJson JSON = new AlunoJson(tnome.getText(), ttelefone.getText(), temail.getText(), "2023045778", "GRAVAR");
                         String json_string = JSON.object.toString();
-                        ClienteHTTP Conexao = new ClienteHTTP(json_string,"http://www.datse.com.br/dev/cadastroalunov1.php");
+                        ClienteHTTP Conexao = new ClienteHTTP(json_string);
                         String ret = Conexao.conecta();
                         JOptionPane.showMessageDialog(null, ret);   
                     } 

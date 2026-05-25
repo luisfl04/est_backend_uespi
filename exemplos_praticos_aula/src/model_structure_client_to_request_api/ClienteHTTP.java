@@ -1,3 +1,5 @@
+package model_structure_client_to_request_api;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -10,17 +12,17 @@ public class ClienteHTTP {
     public String usuario, url, urlParameters, resposta;
     public int codretorno;
     
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrl() {
+        this.url = "http://www.datse.com.br/dev/alunos/alunoapiv1.php";
     }
 
     public void setLogin(String usu) throws Exception {
         this.urlParameters = "post_json_aluno=" + URLEncoder.encode(usu, "UTF-8");
     }
 
-    public ClienteHTTP(String us, String ur) throws Exception {
-        this.setUrl(ur);
-        this.setLogin(us);
+    public ClienteHTTP(String json) throws Exception {
+        this.setLogin(json);
+        this.setUrl();
     }
 
     public String conecta() throws Exception {

@@ -1,7 +1,10 @@
+package model_structure_client_to_request_api;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 
 public class HomeView extends JFrame{
     private JMenuBar menuprincipal;
