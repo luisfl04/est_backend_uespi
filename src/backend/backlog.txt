@@ -1,5 +1,0 @@
-- Estabelecer diagrama com as entidades ->
-    - Entidades:
-        - Usuario(Aluno, Professor, Coordenador)
-
-- Usar docker para estruturar aplicação ->

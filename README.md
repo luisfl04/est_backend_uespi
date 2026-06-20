@@ -1,18 +1,11 @@
-# Aplicação para networking entre integrantes dos cursos de TSI e Computação no CTU/UESPI
+# CRUD básico desenvolvido em PHP/Java
 
-## Escopo:
-### Qual o escopo geral do projeto?
-Plataforma web que irá facilitar a comunicação entrea atores dos cursos de TSI e CC, com divulgação de informações de interesse, armazenamento de informações
-de contato entre os usuários, no estilo de uma 'rede social', mas em um escopo simples e básico.
-
-### Requisitos Funcionais ?
-### Requsitos não Funcionais ? 
+## Tecnologias usadas:
+- PHP puro(Backend)
+- Mysql
+- Java GUI(Frontend)
 
 ## Entidades:
 - Alunos
 - Professores
 - Coordenadores
-
-## Stack:
-### Backend: SpringBoot + Mysql
-### Frontend: Angular
