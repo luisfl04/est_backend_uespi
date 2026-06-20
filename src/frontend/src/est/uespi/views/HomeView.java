@@ -20,9 +20,9 @@ public class HomeView extends JFrame{
     public JMenu getMenuGerenciar() {
         JMenu menuGerenciar = new JMenu("Gerenciar");
         JMenuItem menuGerenciarAluno = this.getMenuGerenciarAluno();
-        JMenuItem menuGerenciarProfessor = new JMenuItem("Professor");
-        JMenuItem menuGerenciarDisciplina = new JMenuItem("Disciplina");
-        JMenuItem menuGerenciarTurma = new JMenuItem("Turma");
+        JMenuItem menuGerenciarProfessor = this.getMenuGerenciarProfessor();
+        JMenuItem menuGerenciarDisciplina = this.getMenuGerenciarDisciplina();
+        JMenuItem menuGerenciarTurma = this.getMenuGerenciarTurma();
         menuGerenciar.add(menuGerenciarAluno);
         menuGerenciar.add(menuGerenciarProfessor);
         menuGerenciar.add(menuGerenciarDisciplina);

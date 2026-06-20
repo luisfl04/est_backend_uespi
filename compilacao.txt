@@ -1,3 +1,3 @@
-Compilar: javac -d out src/est/uespi/views/*.java src/est/uespi/client/*.java
+Compilar: javac -d out src/est/uespi/*.java src/utils/org/json/*.java src/est/uespi/views/*.java src/est/uespi/client/*.java
 Conteúdo do arquivo manifest.txt: Main-Class: est.uespi.SuaClassePrincipal
 Gerar .jar: jar cvfm MeuAppCrud.jar manifest.txt -C out/ .
