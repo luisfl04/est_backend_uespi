@@ -1,27 +1,28 @@
-package src.frontend.views;
+package est.uespi.views;
 
+import est.uespi.client.ClientHttp;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-public class ViewCrudAluno extends JFrame{
+public class ViewCrudProfessor extends JFrame {
 
-    private int widthSize = 1000, heightSize = 1000;
+    private int widthSize = 800, heightSize = 600;
 
-    public ViewCrudAluno() {
-        super("Gerenciamento de Alunos");
+    public ViewCrudProfessor() {
+        super("Gerenciamento de Professores");
         setLayout(new FlowLayout());
         setSize(this.widthSize, this.heightSize);
+        setLocationRelativeTo(null);
         this.addComponents();
     }
 
     public JTable getTabelaListagem() {
-        Object[] tituloColunas = {"Nome", "Email", "Telefone"};
+        Object[] tituloColunas = {"ID", "Nome", "Email", "Telefone", "Formação"};
         Object[][] dados = this.getDados();
         return new JTable(dados, tituloColunas);
     }
@@ -34,29 +35,27 @@ public class ViewCrudAluno extends JFrame{
         add(submitButton);
     }
 
-    public Object[][] getDados(){
+    public Object[][] getDados() {
         try {
+            // Futura integração com ClientHttp ("GET" na URL do professor)
             return new Object[][]{
-                {"Ana Monteiro", "48 9923-7898", "ana.monteiro@gmail.com"},
-                {"João da Silva", "48 8890-3345", "joaosilva@hotmail.com"},
-                {"Pedro Cascaes", "48 9870-5634", "pedrinho@gmail.com"}
+                {1, "Carlos Mendes", "carlos.mendes@uespi.br", "86 91234-5678", "Doutorado em Ciência da Computação"},
+                {2, "Luciana Costa", "luciana.costa@uespi.br", "86 98765-4321", "Mestrado em Redes de Computadores"}
             };
-        }
-        catch (Exception e){
-            return null;
+        } catch (Exception e) {
+            return new Object[0][0];
         }
     }
 
     public JButton getSubmitButton() {
-        JButton submitButton = new JButton("Cadastrar");
+        JButton submitButton = new JButton("Cadastrar Novo Professor");
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ViewFormCadastroAluno formCadastroAluno = new ViewFormCadastroAluno();
-                formCadastroAluno.setVisible(true);
+                // ViewFormCadastroProfessor form = new ViewFormCadastroProfessor();
+                // form.setVisible(true);
             }
         });
-
         return submitButton;
     }
 }

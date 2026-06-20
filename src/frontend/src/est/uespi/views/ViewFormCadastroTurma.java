@@ -1,21 +1,21 @@
-package src.frontend.views;
+package est.uespi.views;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+public class ViewFormCadastroTurma extends JFrame {
 
-public class ViewFormCadastroAluno extends JFrame {
+    private JTextField inputCurso, inputBlocoAtual;
+    private int widthSize = 400, heightSize = 250;
 
-    private JTextField inputEmail, inputNome, inputTelefone;
-    private int widthSize = 1000, heightSize = 1000;
-
-    public ViewFormCadastroAluno() {
-        super("Cadastro de Alunos");
+    public ViewFormCadastroTurma() {
+        super("Cadastro de Turmas");
         setLayout(new FlowLayout());
         this.addComponents();
         this.setSize(widthSize, heightSize);
+        setLocationRelativeTo(null); // Centraliza a janela
     }
 
     public JLabel getLabel(String label) {
@@ -23,24 +23,19 @@ public class ViewFormCadastroAluno extends JFrame {
     }
 
     public JTextField getInput(int numberColumns) {
-        return  new JTextField(numberColumns);
+        return new JTextField(numberColumns);
     }
 
     public void addComponents() {
-        JLabel labelEmail = this.getLabel("Email:");
-        inputEmail = this.getInput(20);
-        add(labelEmail);
-        add(inputEmail);
+        JLabel labelCurso = this.getLabel("Curso:");
+        inputCurso = this.getInput(20);
+        add(labelCurso);
+        add(inputCurso);
 
-        JLabel labelNome = this.getLabel("Nome:");
-        inputNome = this.getInput(20);
-        add(labelNome);
-        add(inputNome);
-
-        JLabel labelTelefone = this.getLabel("Telefone:");
-        inputTelefone = this.getInput(20);
-        add(labelTelefone);
-        add(inputTelefone);
+        JLabel labelBlocoAtual = this.getLabel("Bloco Atual (Número):");
+        inputBlocoAtual = this.getInput(10);
+        add(labelBlocoAtual);
+        add(inputBlocoAtual);
 
         JButton submitButton = this.getSubmitButton();
         JButton cleanButton = this.getCleanTextButton();
@@ -55,8 +50,10 @@ public class ViewFormCadastroAluno extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if(actionEvent.getSource() == submitButton) {
-                    String confirmationMessage = "Email: " + inputEmail.getText() + " --- Nome: " + inputNome.getText() + " --- Telefone: " + inputTelefone.getText();
-                    JOptionPane.showMessageDialog(null, confirmationMessage);
+                    // Futura chamada HTTP via ClientHttp (POST) entrará aqui
+                    String confirmationMessage = "Curso: " + inputCurso.getText() + 
+                                                 " \nBloco Atual: " + inputBlocoAtual.getText();
+                    JOptionPane.showMessageDialog(null, confirmationMessage, "Mock - Turma", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
@@ -70,15 +67,12 @@ public class ViewFormCadastroAluno extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if(actionEvent.getSource() == cleanTextButton) {
-                    inputEmail.setText("");
-                    inputNome.setText("");
-                    inputTelefone.setText("");
+                    inputCurso.setText("");
+                    inputBlocoAtual.setText("");
                 }
             }
         });
 
         return cleanTextButton;
     }
-
-
 }
