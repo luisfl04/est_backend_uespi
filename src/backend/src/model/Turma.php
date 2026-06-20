@@ -1,5 +1,6 @@
 <?php
-require_once 'data/Database.php';
+$base_path = $_SERVER['DOCUMENT_ROOT'];
+require_once $base_path . '/backend/data/Database.php';
 
 class Turma {
     private $id;

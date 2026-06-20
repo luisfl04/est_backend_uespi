@@ -1,5 +1,7 @@
 <?php
-require_once 'model/Aluno.php';
+
+$base_path = $_SERVER['DOCUMENT_ROOT'];
+require_once $base_path . '/backend/model/Aluno.php';
 
 class AlunoController {
 
@@ -10,8 +12,15 @@ class AlunoController {
         exit;
     }
     private function getJsonInput() {
-        $body = file_get_contents("php://input");
-        return json_decode($body, true);
+        try {
+            $body = file_get_contents("php://input");
+            return json_decode($body, true);
+        }
+        catch(Exception $e) {
+            $this->jsonResponse([
+                "mensagem" => "Erro ao tratar os dados", 
+            ], 500);
+        }
     }
 
     public function handleRequest($method, $id = null) {
@@ -64,7 +73,7 @@ class AlunoController {
 
     private function create() {
         $dados = $this->getJsonInput();
-
+        
         if (!isset($dados['nome']) || !isset($dados['email'])) {
             $this->jsonResponse(["erro" => "Os campos 'nome' e 'email' são obrigatórios."], 400);
         }
@@ -79,7 +88,7 @@ class AlunoController {
             $this->jsonResponse([
                 "mensagem" => "Aluno criado com sucesso.", 
                 "id" => $idCriado
-            ], 201); // 201 Created
+            ], 201);
         } catch (PDOException $e) {
 
             if ($e->getCode() == 23000) { 
@@ -97,7 +106,6 @@ class AlunoController {
             $this->jsonResponse(["erro" => "Aluno não encontrado para atualização."], 404);
         }
 
-        // Validação básica
         if (!isset($dados['nome']) || !isset($dados['email'])) {
             $this->jsonResponse(["erro" => "Os campos 'nome' e 'email' são obrigatórios."], 400);
         }

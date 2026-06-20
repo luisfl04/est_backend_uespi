@@ -1,5 +1,6 @@
 <?php
-require_once 'model/Professor.php';
+$base_path = $_SERVER['DOCUMENT_ROOT'];
+require_once $base_path . '/backend/model/Professor.php';
 
 class ProfessorController {
 
