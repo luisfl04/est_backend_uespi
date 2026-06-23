@@ -1,6 +1,10 @@
 package est.uespi.views;
 
 import javax.swing.*;
+
+import est.uespi.client.ClientHttp;
+import org.json.JSONObject;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +12,8 @@ import java.awt.event.ActionListener;
 public class ViewFormCadastroProfessor extends JFrame {
 
     private JTextField inputNome, inputEmail, inputTelefone, inputFormacao;
+    private String baseURL = "http://localhost/backend/api/process_request.php?entidade=professor";
+    private String method = "POST";
     private int widthSize = 400, heightSize = 350;
 
     public ViewFormCadastroProfessor() {
@@ -55,16 +61,64 @@ public class ViewFormCadastroProfessor extends JFrame {
 
     public JButton getSubmitButton() {
         JButton submitButton = new JButton("Cadastrar");
-
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if(actionEvent.getSource() == submitButton) {
-                    String confirmationMessage = "Nome: " + inputNome.getText() + 
-                                                 "\nEmail: " + inputEmail.getText() + 
-                                                 "\nTelefone: " + inputTelefone.getText() +
-                                                 "\nFormação: " + inputFormacao.getText();
-                    JOptionPane.showMessageDialog(null, confirmationMessage, "Mock - Professor", JOptionPane.INFORMATION_MESSAGE);
+                    try {
+                        String nome = inputNome.getText().trim();
+                        String email = inputEmail.getText().trim();
+                        String telefone = inputTelefone.getText().trim();
+                        String formacao = inputFormacao.getText().trim();
+
+                        if (nome.isEmpty() || email.isEmpty() || formacao.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, 
+                                "Campos obrigatórios não foram informados.", 
+                                "Aviso", 
+                                JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+
+                        JSONObject payload = new JSONObject();
+                        payload.put("nome", nome);
+                        payload.put("email", email);
+                        payload.put("formacao", formacao);
+                        
+                        if (!telefone.isEmpty()) {
+                            payload.put("telefone", telefone);
+                        }
+
+                        ClientHttp client = new ClientHttp(baseURL, method, payload.toString());
+                        String response = client.request();
+                        JSONObject jsonResponse = new JSONObject(response);
+
+                        if (jsonResponse.has("mensagem")) {
+                            JOptionPane.showMessageDialog(null, 
+                                jsonResponse.getString("mensagem"), 
+                                "Cadastro Realizado", 
+                                JOptionPane.INFORMATION_MESSAGE
+                            );
+                        
+                            inputNome.setText("");
+                            inputEmail.setText("");
+                            inputTelefone.setText("");
+                            inputFormacao.setText("");
+                                
+                        } else if (jsonResponse.has("erro")) {
+                            JOptionPane.showMessageDialog(null, 
+                                jsonResponse.getString("erro"), 
+                                "Falha no Cadastro", 
+                                JOptionPane.ERROR_MESSAGE);
+                        }
+
+                    } 
+                    catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, 
+                            "Erro ao persistir dados: " + e.getMessage(), 
+                            "Erro de Conexão", 
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                
                 }
             }
         });
