@@ -92,7 +92,7 @@ class AlunoController {
         } catch (PDOException $e) {
 
             if ($e->getCode() == 23000) { 
-                $this->jsonResponse(["erro" => "Este e-mail já está cadastrado."], 409);
+                $this->jsonResponse(["erro" => "Erro ao cadastrar dados, verifique os dados informados e tente novamente"], 409);
             }
             throw $e;
         }
@@ -124,7 +124,10 @@ class AlunoController {
             }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) { 
-                $this->jsonResponse(["erro" => "Este e-mail já está sendo usado por outro cadastro."], 409);
+                $this->jsonResponse([
+                    "erro" => "Erro ao processar os dados, verifique e tente novamente.",
+                    "descricao" => $e->getMessage()
+                ], 500);
             }
             throw $e;
         }

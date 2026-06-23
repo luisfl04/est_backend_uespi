@@ -7,7 +7,6 @@ class Turma {
     private $curso;
     private $bloco_atual;
 
-    // 2. Construtor recebe os parâmetros NOT NULL
     public function __construct($curso, $bloco_atual, $id = null) {
         $this->curso = $curso;
         $this->bloco_atual = $bloco_atual;
