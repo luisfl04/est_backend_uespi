@@ -1,14 +1,17 @@
 package est.uespi.views;
 
 import javax.swing.*;
+import est.uespi.client.ClientHttp;
+import org.json.JSONObject;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 public class ViewFormCadastroDisciplina extends JFrame {
 
     private JTextField inputNome, inputCursoRelacionado, inputBlocoRelacionado;
     private int widthSize = 400, heightSize = 300;
+    private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=disciplina";
+
 
     public ViewFormCadastroDisciplina() {
         super("Cadastro de Disciplinas");
@@ -51,15 +54,57 @@ public class ViewFormCadastroDisciplina extends JFrame {
     public JButton getSubmitButton() {
         JButton submitButton = new JButton("Cadastrar");
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if(actionEvent.getSource() == submitButton) {
-                    String confirmationMessage = "Disciplina: " + inputNome.getText() + 
-                                                 "\nCurso: " + inputCursoRelacionado.getText() + 
-                                                 "\nBloco: " + inputBlocoRelacionado.getText();
-                    JOptionPane.showMessageDialog(null, confirmationMessage, "Mock - Disciplina", JOptionPane.INFORMATION_MESSAGE);
+        submitButton.addActionListener(e -> {
+            try {
+                String nome = inputNome.getText().trim();
+                String curso = inputCursoRelacionado.getText().trim();
+                String blocoStr = inputBlocoRelacionado.getText().trim();
+
+                if (nome.isEmpty() || curso.isEmpty() || blocoStr.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, 
+                        "Os campos Nome e Curso são obrigatórios!", 
+                        "Aviso", 
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
+
+                JSONObject payload = new JSONObject();
+                payload.put("nome", nome);
+                payload.put("curso_relacionado", curso);
+                
+                
+                if (!blocoStr.isEmpty()) {
+                    payload.put("bloco_relacionado", Integer.parseInt(blocoStr)); 
+                }
+
+                ClientHttp client = new ClientHttp(baseUrl, "POST", payload.toString());
+                String response = client.request();
+                
+                JSONObject responseObject = new JSONObject(response);
+
+                if (responseObject.has("mensagem")) {
+                    JOptionPane.showMessageDialog(null, 
+                        responseObject.getString("mensagem"), 
+                        "Sucesso", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                        
+                    dispose();
+                    
+                } else if (responseObject.has("erro")) {
+                    JOptionPane.showMessageDialog(null, 
+                        responseObject.getString("erro"), 
+                        "Erro no Cadastro", 
+                        JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(null, 
+                    "O campo Bloco deve conter apenas números.", 
+                    "Erro de Formatação", 
+                    JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                System.out.println("Exception: " + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Erro ao cadastrar disciplina.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -68,15 +113,11 @@ public class ViewFormCadastroDisciplina extends JFrame {
 
     public JButton getCleanTextButton() {
         JButton cleanTextButton = new JButton("Limpar campos");
-        cleanTextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if(actionEvent.getSource() == cleanTextButton) {
-                    inputNome.setText("");
-                    inputCursoRelacionado.setText("");
-                    inputBlocoRelacionado.setText("");
-                }
-            }
+        
+        cleanTextButton.addActionListener(e -> {
+            inputNome.setText("");
+            inputCursoRelacionado.setText("");
+            inputBlocoRelacionado.setText("");
         });
 
         return cleanTextButton;
