@@ -27,7 +27,7 @@ import org.json.JSONArray;
 
 public class ViewCrudProfessor extends JFrame {
 
-    private int widthSize = 800, heightSize = 600;
+    private int widthSize = 900, heightSize = 600;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=professor";
     private Object[] tituloColunas = {"ID", "Nome", "Email", "Telefone", "Formação", "Editar", "Excluir"};
 

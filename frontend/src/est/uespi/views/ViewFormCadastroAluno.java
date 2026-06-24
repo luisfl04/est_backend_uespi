@@ -1,153 +1,159 @@
 package est.uespi.views;
 
 import javax.swing.*;
-
 import est.uespi.client.ClientHttp;
 import org.json.JSONObject;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 public class ViewFormCadastroAluno extends JFrame {
 
     private JTextField inputNome, inputEmail, inputTelefone, inputTurmaId;
-    private int widthSize = 400, heightSize = 350;
+    private int widthSize = 450, heightSize = 400; 
     private String baseURL = "http://localhost/backend/api/process_request.php?entidade=aluno";
     private String method = "POST"; 
 
+    
     public ViewFormCadastroAluno() {
         super("Cadastro de Alunos");
-        setLayout(new FlowLayout());
-        this.addComponents();
-        this.setSize(widthSize, heightSize);
+        setLayout(new BorderLayout(10, 10));
+        setSize(widthSize, heightSize);
         setLocationRelativeTo(null);
-    }
-
-    public JLabel getLabel(String label) {
-        return new JLabel(label);
-    }
-
-    public JTextField getInput(int numberColumns) {
-        return new JTextField(numberColumns);
+        this.addComponents();
     }
 
     public void addComponents() {
-        JLabel labelNome = this.getLabel("Nome:");
-        inputNome = this.getInput(20);
-        add(labelNome);
-        add(inputNome);
+        JLabel titulo = new JLabel("Cadastro de Aluno", SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        add(titulo, BorderLayout.NORTH);
 
-        JLabel labelEmail = this.getLabel("Email:");
-        inputEmail = this.getInput(20);
-        add(labelEmail);
-        add(inputEmail);
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel labelTelefone = this.getLabel("Telefone:");
-        inputTelefone = this.getInput(20);
-        add(labelTelefone);
-        add(inputTelefone);
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Nome:"), gbc);
+        gbc.gridx = 1;
+        inputNome = new JTextField(20);
+        painelFormulario.add(inputNome, gbc);
 
-        JLabel labelTurmaId = this.getLabel("ID da Turma:");
-        inputTurmaId = this.getInput(10);
-        add(labelTurmaId);
-        add(inputTurmaId);
+        gbc.gridx = 0; gbc.gridy = 1;
+        painelFormulario.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1;
+        inputEmail = new JTextField(20);
+        painelFormulario.add(inputEmail, gbc);
 
-        JButton submitButton = this.getSubmitButton();
+        gbc.gridx = 0; gbc.gridy = 2;
+        painelFormulario.add(new JLabel("Telefone:"), gbc);
+        gbc.gridx = 1;
+        inputTelefone = new JTextField(20);
+        painelFormulario.add(inputTelefone, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 3;
+        painelFormulario.add(new JLabel("ID da Turma:"), gbc);
+        gbc.gridx = 1;
+        inputTurmaId = new JTextField(10);
+        painelFormulario.add(inputTurmaId, gbc);
+
+        add(painelFormulario, BorderLayout.CENTER);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
+        JButton btnSubmit = this.getSubmitButton();
+        JButton btnClose = this.getCloseButton();
         JButton cleanButton = this.getCleanTextButton();
-        add(submitButton);
-        add(cleanButton);
-    }
-
-    public JButton getSubmitButton() {
-        JButton submitButton = new JButton("Cadastrar");
-
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if(actionEvent.getSource() == submitButton) {
-                    try {
-                        String nome = inputNome.getText().trim();
-                        String email = inputEmail.getText().trim();
-                        String telefone = inputTelefone.getText().trim();
-                        String turmaIdStr = inputTurmaId.getText().trim();
-
-                        if (nome.isEmpty() || email.isEmpty()) {
-                            JOptionPane.showMessageDialog(null, 
-                                "Os campos Nome e Email são obrigatórios!", 
-                                "Aviso", 
-                                JOptionPane.WARNING_MESSAGE);
-                            return;
-                        }
-
-                        JSONObject payload = new JSONObject();
-                        payload.put("nome", nome);
-                        payload.put("email", email);
-                        
-                        if (!telefone.isEmpty()) {
-                            payload.put("telefone", telefone);
-                        }
-                        if (!turmaIdStr.isEmpty()) {
-                            payload.put("turma_id", Integer.parseInt(turmaIdStr)); 
-                        }
-
-                        ClientHttp client = new ClientHttp(baseURL, method, payload.toString());
-                        String response = client.request();
-
-                        JSONObject jsonResponse = new JSONObject(response);
-
-                        if (jsonResponse.has("mensagem")) {
-                            JOptionPane.showMessageDialog(null, 
-                                jsonResponse.getString("mensagem"), 
-                                "Cadastro Realizado", 
-                                JOptionPane.INFORMATION_MESSAGE);
-                        
-                            inputNome.setText("");
-                            inputEmail.setText("");
-                            inputTelefone.setText("");
-                            inputTurmaId.setText("");
-                            
-                        } else if (jsonResponse.has("erro")) {
-                            JOptionPane.showMessageDialog(null, 
-                                jsonResponse.getString("erro"), 
-                                "Falha no Cadastro", 
-                                JOptionPane.ERROR_MESSAGE);
-                        }
-
-                    } catch (NumberFormatException nfe) {
-                        JOptionPane.showMessageDialog(null, 
-                            "O campo ID da Turma deve conter apenas números.", 
-                            "Erro de Formato", 
-                            JOptionPane.ERROR_MESSAGE);
-                            
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(null, 
-                                "Erro ao se comunicar com o servidor: " + e.getMessage(), 
-                                "Erro de Conexão", 
-                                JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            }
-        );
-
-        return submitButton;
+        painelBotoes.add(btnSubmit);
+        painelBotoes.add(btnClose);
+        painelBotoes.add(cleanButton);
+        add(painelBotoes, BorderLayout.SOUTH);
     }
 
     public JButton getCleanTextButton() {
         JButton cleanTextButton = new JButton("Limpar campos");
-        cleanTextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                if(actionEvent.getSource() == cleanTextButton) {
+        
+        cleanTextButton.addActionListener(e -> {
+            inputNome.setText("");
+            inputEmail.setText("");
+            inputTelefone.setText("");
+            inputTurmaId.setText("");
+        });
+
+        return cleanTextButton;
+    }
+
+    public JButton getSubmitButton() {
+        JButton submitButton = new JButton("Cadastrar");
+        
+        submitButton.addActionListener(e -> {
+            try {
+                String nome = inputNome.getText().trim();
+                String email = inputEmail.getText().trim();
+                String telefone = inputTelefone.getText().trim();
+                String turmaIdStr = inputTurmaId.getText().trim();
+
+                if (nome.isEmpty() || email.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, 
+                        "Os campos Nome e Email são obrigatórios!", 
+                        "Aviso", 
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                JSONObject payload = new JSONObject();
+                payload.put("nome", nome);
+                payload.put("email", email);
+                
+                if (!telefone.isEmpty()) {
+                    payload.put("telefone", telefone);
+                }
+                if (!turmaIdStr.isEmpty()) {
+                    payload.put("turma_id", Integer.parseInt(turmaIdStr)); 
+                }
+
+                ClientHttp client = new ClientHttp(baseURL, method, payload.toString());
+                String response = client.request();
+
+                JSONObject jsonResponse = new JSONObject(response);
+
+                if (jsonResponse.has("mensagem")) {
+                    JOptionPane.showMessageDialog(null, 
+                        jsonResponse.getString("mensagem"), 
+                        "Cadastro Realizado", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                
                     inputNome.setText("");
                     inputEmail.setText("");
                     inputTelefone.setText("");
                     inputTurmaId.setText("");
+                    
+                } else if (jsonResponse.has("erro")) {
+                    JOptionPane.showMessageDialog(null, 
+                        jsonResponse.getString("erro"), 
+                        "Falha no Cadastro", 
+                        JOptionPane.ERROR_MESSAGE);
                 }
+
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(null, 
+                    "O campo ID da Turma deve conter apenas números.", 
+                    "Erro de Formato", 
+                    JOptionPane.ERROR_MESSAGE);
+                    
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, 
+                    "Erro ao se comunicar com o servidor: " + ex.getMessage(), 
+                    "Erro de Conexão", 
+                    JOptionPane.ERROR_MESSAGE);
             }
         });
 
-        return cleanTextButton;
+        return submitButton;
+    }
+
+    public JButton getCloseButton() {
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose());
+        return closeButton;
     }
 }

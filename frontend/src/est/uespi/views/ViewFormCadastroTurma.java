@@ -9,16 +9,16 @@ import java.awt.*;
 public class ViewFormCadastroTurma extends JFrame {
 
     private JTextField inputCurso, inputBlocoAtual;
-    private int widthSize = 400, heightSize = 250;
+    private int widthSize = 450, heightSize = 250;
     
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=turma";
 
     public ViewFormCadastroTurma() {
         super("Cadastro de Turmas");
-        setLayout(new FlowLayout());
-        this.addComponents();
+        setLayout(new BorderLayout(10,10));
         this.setSize(widthSize, heightSize);
         setLocationRelativeTo(null); 
+        this.addComponents();
     }
 
     public JLabel getLabel(String label) {
@@ -30,20 +30,43 @@ public class ViewFormCadastroTurma extends JFrame {
     }
 
     public void addComponents() {
-        JLabel labelCurso = this.getLabel("Curso:");
-        inputCurso = this.getInput(20);
-        add(labelCurso);
-        add(inputCurso);
+        JLabel titulo = new JLabel("Cadastro de Turmas", SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        add(titulo, BorderLayout.NORTH);
 
-        JLabel labelBlocoAtual = this.getLabel("Bloco Atual (Número):");
-        inputBlocoAtual = this.getInput(10);
-        add(labelBlocoAtual);
-        add(inputBlocoAtual);
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JButton submitButton = this.getSubmitButton();
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Curso:"), gbc);
+        gbc.gridx = 1;
+        inputCurso = new JTextField(20);
+        painelFormulario.add(inputCurso, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        painelFormulario.add(new JLabel("Bloco:"), gbc);
+        gbc.gridx = 1;
+        inputBlocoAtual = new JTextField(20);
+        painelFormulario.add(inputBlocoAtual, gbc);
+        add(painelFormulario, BorderLayout.CENTER);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
+        JButton btnSubmit = this.getSubmitButton();
+        JButton btnClose = this.getCloseButton();
         JButton cleanButton = this.getCleanTextButton();
-        add(submitButton);
-        add(cleanButton);
+        painelBotoes.add(btnSubmit);
+        painelBotoes.add(btnClose);
+        painelBotoes.add(cleanButton);
+        add(painelBotoes, BorderLayout.SOUTH);
+    }
+
+    public JButton getCloseButton() {
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose());
+        return closeButton;
     }
 
     public JButton getSubmitButton() {

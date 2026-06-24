@@ -9,16 +9,16 @@ import java.awt.*;
 public class ViewFormCadastroDisciplina extends JFrame {
 
     private JTextField inputNome, inputCursoRelacionado, inputBlocoRelacionado;
-    private int widthSize = 400, heightSize = 300;
+    private int widthSize = 450, heightSize = 300;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=disciplina";
 
 
     public ViewFormCadastroDisciplina() {
         super("Cadastro de Disciplinas");
-        setLayout(new FlowLayout());
-        this.addComponents();
+        setLayout(new BorderLayout(10,10));
         this.setSize(widthSize, heightSize);
         setLocationRelativeTo(null);
+        this.addComponents();
     }
 
     public JLabel getLabel(String label) {
@@ -29,26 +29,51 @@ public class ViewFormCadastroDisciplina extends JFrame {
         return new JTextField(numberColumns);
     }
 
+    public JButton getCloseButton() {
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose());
+        return closeButton;
+    }
+
     public void addComponents() {
-        JLabel labelNome = this.getLabel("Nome da Disciplina:");
-        inputNome = this.getInput(20);
-        add(labelNome);
-        add(inputNome);
+        JLabel titulo = new JLabel("Cadastro de Disciplina", SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        add(titulo, BorderLayout.NORTH);
+        
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel labelCurso = this.getLabel("Curso Relacionado:");
-        inputCursoRelacionado = this.getInput(20);
-        add(labelCurso);
-        add(inputCursoRelacionado);
+        
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Nome da disciplina:"), gbc);
+        gbc.gridx = 1;
+        inputNome = new JTextField(20);
+        painelFormulario.add(inputNome, gbc);
 
-        JLabel labelBloco = this.getLabel("Bloco Relacionado (Número):");
-        inputBlocoRelacionado = this.getInput(10);
-        add(labelBloco);
-        add(inputBlocoRelacionado);
+        gbc.gridx = 0; gbc.gridy = 1;
+        painelFormulario.add(new JLabel("Curso relacionado:"), gbc);
+        gbc.gridx = 1;
+        inputCursoRelacionado = new JTextField(20);
+        painelFormulario.add(inputCursoRelacionado, gbc);
 
-        JButton submitButton = this.getSubmitButton();
+        gbc.gridx = 0; gbc.gridy = 2;
+        painelFormulario.add(new JLabel("Bloco(Número):"), gbc);
+        gbc.gridx = 1;
+        inputBlocoRelacionado = new JTextField(20);
+        painelFormulario.add(inputBlocoRelacionado, gbc);
+        
+        add(painelFormulario, BorderLayout.CENTER);
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
+        JButton btnSubmit = this.getSubmitButton();
+        JButton btnClose = this.getCloseButton();
         JButton cleanButton = this.getCleanTextButton();
-        add(submitButton);
-        add(cleanButton);
+        painelBotoes.add(btnSubmit);
+        painelBotoes.add(btnClose);
+        painelBotoes.add(cleanButton);
+        add(painelBotoes, BorderLayout.SOUTH);
     }
 
     public JButton getSubmitButton() {

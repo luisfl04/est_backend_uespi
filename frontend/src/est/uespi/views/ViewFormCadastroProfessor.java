@@ -14,14 +14,14 @@ public class ViewFormCadastroProfessor extends JFrame {
     private JTextField inputNome, inputEmail, inputTelefone, inputFormacao;
     private String baseURL = "http://localhost/backend/api/process_request.php?entidade=professor";
     private String method = "POST";
-    private int widthSize = 400, heightSize = 350;
+    private int widthSize = 450, heightSize = 350;
 
     public ViewFormCadastroProfessor() {
         super("Cadastro de Professores");
-        setLayout(new FlowLayout());
-        this.addComponents();
+        setLayout(new BorderLayout(10,10));
         this.setSize(widthSize, heightSize);
         setLocationRelativeTo(null);
+        this.addComponents();
     }
 
     public JLabel getLabel(String label) {
@@ -33,30 +33,56 @@ public class ViewFormCadastroProfessor extends JFrame {
     }
 
     public void addComponents() {
-        JLabel labelNome = this.getLabel("Nome:");
-        inputNome = this.getInput(20);
-        add(labelNome);
-        add(inputNome);
+        JLabel titulo = new JLabel("Cadastro de Professor", SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        add(titulo, BorderLayout.NORTH);
 
-        JLabel labelEmail = this.getLabel("Email:");
-        inputEmail = this.getInput(20);
-        add(labelEmail);
-        add(inputEmail);
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel labelTelefone = this.getLabel("Telefone:");
-        inputTelefone = this.getInput(20);
-        add(labelTelefone);
-        add(inputTelefone);
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Nome:"), gbc);
+        gbc.gridx = 1;
+        inputNome = new JTextField(20);
+        painelFormulario.add(inputNome, gbc);
 
-        JLabel labelFormacao = this.getLabel("Formação:");
-        inputFormacao = this.getInput(20);
-        add(labelFormacao);
-        add(inputFormacao);
+        gbc.gridx = 0; gbc.gridy = 1;
+        painelFormulario.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1;
+        inputEmail = new JTextField(20);
+        painelFormulario.add(inputEmail, gbc);
 
-        JButton submitButton = this.getSubmitButton();
+        gbc.gridx = 0; gbc.gridy = 2;
+        painelFormulario.add(new JLabel("Telefone:"), gbc);
+        gbc.gridx = 1;
+        inputTelefone = new JTextField(20);
+        painelFormulario.add(inputTelefone, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 3;
+        painelFormulario.add(new JLabel("Formação: "), gbc);
+        gbc.gridx = 1;
+        inputFormacao = new JTextField(20);
+        painelFormulario.add(inputFormacao, gbc);
+
+        add(painelFormulario, BorderLayout.CENTER);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
+        JButton btnSubmit = this.getSubmitButton();
+        JButton btnClose = this.getCloseButton();
         JButton cleanButton = this.getCleanTextButton();
-        add(submitButton);
-        add(cleanButton);
+        painelBotoes.add(btnSubmit);
+        painelBotoes.add(btnClose);
+        painelBotoes.add(cleanButton);
+        add(painelBotoes, BorderLayout.SOUTH);
+    }
+
+    public JButton getCloseButton() {
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose());
+        return closeButton;
     }
 
     public JButton getSubmitButton() {
