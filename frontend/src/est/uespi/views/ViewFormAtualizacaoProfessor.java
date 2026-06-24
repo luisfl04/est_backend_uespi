@@ -13,18 +13,18 @@ public class ViewFormAtualizacaoProfessor extends JFrame {
 
     private JTextField inputNome, inputEmail, inputTelefone, inputFormacao;
     private int idProfessor;
-    private int widthSize = 400, heightSize = 350;
+    private int widthSize = 450, heightSize = 350;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=professor";
-
+    private String nomeProfessor;
 
     public ViewFormAtualizacaoProfessor(int id, String nomeProfessor) {
         super("Atualização de Professor - " + nomeProfessor);
+        this.nomeProfessor = nomeProfessor;
         this.idProfessor = id;
-        setLayout(new FlowLayout());
-        this.addComponents();
+        setLayout(new BorderLayout(10, 10));
         this.setSize(widthSize, heightSize);
         setLocationRelativeTo(null);
-        
+        this.addComponents();
         this.carregarDados(idProfessor);
     }
 
@@ -47,24 +47,54 @@ public class ViewFormAtualizacaoProfessor extends JFrame {
     public JLabel getLabel(String label) { return new JLabel(label); }
     public JTextField getInput(int numberColumns) { return new JTextField(numberColumns); }
 
+    public JButton getCloseButton() {
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose());
+        return closeButton;
+    }
+
     public void addComponents() {
-        add(this.getLabel("Nome:"));
-        inputNome = this.getInput(20);
-        add(inputNome);
+        JLabel titulo = new JLabel("Professor - " + this.nomeProfessor, SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        add(titulo, BorderLayout.NORTH);
 
-        add(this.getLabel("Email:"));
-        inputEmail = this.getInput(20);
-        add(inputEmail);
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        add(this.getLabel("Telefone:"));
-        inputTelefone = this.getInput(20);
-        add(inputTelefone);
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Nome:"), gbc);
+        gbc.gridx = 1;
+        inputNome = new JTextField(20);
+        painelFormulario.add(inputNome, gbc);
 
-        add(this.getLabel("Formação:"));
-        inputFormacao = this.getInput(20);
-        add(inputFormacao);
+        gbc.gridx = 0; gbc.gridy = 1;
+        painelFormulario.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1;
+        inputEmail = new JTextField(20);
+        painelFormulario.add(inputEmail, gbc);
 
-        add(this.getUpdateButton());
+        gbc.gridx = 0; gbc.gridy = 2;
+        painelFormulario.add(new JLabel("Telefone:"), gbc);
+        gbc.gridx = 1;
+        inputTelefone = new JTextField(20);
+        painelFormulario.add(inputTelefone, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 3;
+        painelFormulario.add(new JLabel("Formacao:"), gbc);
+        gbc.gridx = 1;
+        inputFormacao = new JTextField(10);
+        painelFormulario.add(inputFormacao, gbc);
+        add(painelFormulario, BorderLayout.CENTER);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
+        JButton btnSubmit = this.getUpdateButton();
+        JButton btnClose = this.getCloseButton();
+        painelBotoes.add(btnSubmit);
+        painelBotoes.add(btnClose);
+        add(painelBotoes, BorderLayout.SOUTH);
     }
 
     public JButton getUpdateButton() {

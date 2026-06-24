@@ -10,18 +10,19 @@ public class ViewFormAtualizacaoDisciplina extends JFrame {
 
     private JTextField inputNome, inputCursoRelacionado, inputBlocoRelacionado;
     private int idDisciplina;
-    private int widthSize = 400, heightSize = 300;
-    
+    private int widthSize = 450, heightSize = 300;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=disciplina";
+    private String nomeDisciplina;
+
 
     public ViewFormAtualizacaoDisciplina(int id, String nomeDisciplina) {
         super("Atualização de Disciplina - " + nomeDisciplina);
+        this.nomeDisciplina = nomeDisciplina;
         this.idDisciplina = id;
-        setLayout(new FlowLayout());
-        this.addComponents();
+        setLayout(new BorderLayout(10,10));
         this.setSize(widthSize, heightSize);
         setLocationRelativeTo(null);
-        
+        this.addComponents();
         this.carregarDados(idDisciplina);
     }
 
@@ -43,20 +44,48 @@ public class ViewFormAtualizacaoDisciplina extends JFrame {
     public JLabel getLabel(String label) { return new JLabel(label); }
     public JTextField getInput(int numberColumns) { return new JTextField(numberColumns); }
 
+    public JButton getCloseButton() {
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose());
+        return closeButton;
+    }
+
     public void addComponents() {
-        add(this.getLabel("Nome da Disciplina:"));
-        inputNome = this.getInput(20);
-        add(inputNome);
+        JLabel titulo = new JLabel("Disciplina - " + this.nomeDisciplina, SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        add(titulo, BorderLayout.NORTH);
 
-        add(this.getLabel("Curso Relacionado:"));
-        inputCursoRelacionado = this.getInput(20);
-        add(inputCursoRelacionado);
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        add(this.getLabel("Bloco Relacionado (Número):"));
-        inputBlocoRelacionado = this.getInput(10);
-        add(inputBlocoRelacionado);
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Nome:"), gbc);
+        gbc.gridx = 1;
+        inputNome = new JTextField(20);
+        painelFormulario.add(inputNome, gbc);
 
-        add(this.getUpdateButton());
+        gbc.gridx = 0; gbc.gridy = 1;
+        painelFormulario.add(new JLabel("Curso:"), gbc);
+        gbc.gridx = 1;
+        inputCursoRelacionado = new JTextField(20);
+        painelFormulario.add(inputCursoRelacionado, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 2;
+        painelFormulario.add(new JLabel("Bloco:"), gbc);
+        gbc.gridx = 1;
+        inputBlocoRelacionado = new JTextField(20);
+        painelFormulario.add(inputBlocoRelacionado, gbc);
+        add(painelFormulario, BorderLayout.CENTER);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
+        JButton btnSubmit = this.getUpdateButton();
+        JButton btnClose = this.getCloseButton();
+        painelBotoes.add(btnSubmit);
+        painelBotoes.add(btnClose);
+        add(painelBotoes, BorderLayout.SOUTH);
     }
 
     public JButton getUpdateButton() {
@@ -66,9 +95,9 @@ public class ViewFormAtualizacaoDisciplina extends JFrame {
             try {
                 String nome = inputNome.getText().trim();
                 String curso = inputCursoRelacionado.getText().trim();
-                String blocoStr = inputBlocoRelacionado.getText().trim();
+                String bloco = inputBlocoRelacionado.getText().trim();
 
-                if (nome.isEmpty() || curso.isEmpty() || blocoStr.isEmpty() ) {
+                if (nome.isEmpty() || curso.isEmpty() || bloco.isEmpty() ) {
                     JOptionPane.showMessageDialog(null, 
                         "Campos obrigatórios ausentes, verifique e tente novamente.", 
                         "Aviso", 
@@ -80,8 +109,8 @@ public class ViewFormAtualizacaoDisciplina extends JFrame {
                 payload.put("nome", nome);
                 payload.put("curso_relacionado", curso);
                     
-                if (!blocoStr.isEmpty()) {
-                    payload.put("bloco_relacionado", Integer.parseInt(blocoStr)); 
+                if (!bloco.isEmpty()) {
+                    payload.put("bloco_relacionado", bloco); 
                 }
 
                 ClientHttp client = new ClientHttp(baseUrl + "&id=" + idDisciplina, "PUT", payload.toString());

@@ -4,7 +4,7 @@ USE crud_sistema_academico;
 CREATE TABLE Turma (
     id INT AUTO_INCREMENT PRIMARY KEY,
     curso VARCHAR(100) NOT NULL,
-    bloco_atual INT NOT NULL
+    bloco_atual VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Aluno (
@@ -28,5 +28,5 @@ CREATE TABLE Disciplina (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     curso_relacionado VARCHAR(100) NOT NULL,
-    bloco_relacionado INT NOT NULL
+    bloco_relacionado VARCHAR(100) NOT NULL
 );

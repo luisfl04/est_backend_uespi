@@ -83,9 +83,9 @@ public class ViewFormCadastroDisciplina extends JFrame {
             try {
                 String nome = inputNome.getText().trim();
                 String curso = inputCursoRelacionado.getText().trim();
-                String blocoStr = inputBlocoRelacionado.getText().trim();
+                String bloco = inputBlocoRelacionado.getText().trim();
 
-                if (nome.isEmpty() || curso.isEmpty() || blocoStr.isEmpty()) {
+                if (nome.isEmpty() || curso.isEmpty() || bloco.isEmpty()) {
                     JOptionPane.showMessageDialog(null, 
                         "Os campos Nome e Curso são obrigatórios!", 
                         "Aviso", 
@@ -98,8 +98,8 @@ public class ViewFormCadastroDisciplina extends JFrame {
                 payload.put("curso_relacionado", curso);
                 
                 
-                if (!blocoStr.isEmpty()) {
-                    payload.put("bloco_relacionado", Integer.parseInt(blocoStr)); 
+                if (!bloco.isEmpty()) {
+                    payload.put("bloco_relacionado", bloco); 
                 }
 
                 ClientHttp client = new ClientHttp(baseUrl, "POST", payload.toString());

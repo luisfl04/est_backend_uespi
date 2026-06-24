@@ -181,8 +181,8 @@ public class ViewCrudDisciplina extends JFrame {
                 dados[i][2] = obj.isNull("curso_relacionado") ? "Indefinido" : obj.getString("curso_relacionado");
                 dados[i][3] = obj.isNull("bloco_relacionado") ? "Indefinido" : obj.getInt("bloco_relacionado");
                 
-                dados[i][4] = "Editar"; 
-                dados[i][5] = "Excluir"; 
+                dados[i][4] = "editar"; 
+                dados[i][5] = "excluir"; 
             }
 
             return dados;

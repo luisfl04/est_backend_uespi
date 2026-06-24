@@ -21,7 +21,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-
+import java.lang.reflect.Type;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -55,8 +55,10 @@ public class ViewCrudTurma extends JFrame {
         ActionListener acaoEditar = e -> {
             int linhaClicada = Integer.parseInt(e.getActionCommand());
             int idTurma = (int) tabela.getValueAt(linhaClicada, 0);
-            String nomeCurso = (String) tabela.getValueAt(linhaClicada, 1);            
-            ViewFormAtualizacaoTurma viewEdicao = new ViewFormAtualizacaoTurma(idTurma, nomeCurso);
+            String nomeCurso = (String) tabela.getValueAt(linhaClicada, 1);
+            String blocoCurso = String.valueOf(tabela.getValueAt(linhaClicada, 2));  
+            String identificacaoTurma = nomeCurso.concat("-").concat(blocoCurso);           
+            ViewFormAtualizacaoTurma viewEdicao = new ViewFormAtualizacaoTurma(idTurma, identificacaoTurma);
             viewEdicao.setVisible(true);
         };
 
@@ -181,8 +183,8 @@ public class ViewCrudTurma extends JFrame {
                 dados[i][1] = obj.isNull("curso") ? "Indefinido" : obj.getString("curso");
                 dados[i][2] = obj.isNull("bloco_atual") ? "Indefinido" : obj.getInt("bloco_atual");
                 
-                dados[i][3] = "Editar"; 
-                dados[i][4] = "Excluir"; 
+                dados[i][3] = "editar"; 
+                dados[i][4] = "excluir"; 
             }
 
             return dados;

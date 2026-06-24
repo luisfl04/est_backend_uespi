@@ -173,8 +173,8 @@ public class ViewCrudAluno extends JFrame {
                 dados[i][2] = obj.getString("email");
                 dados[i][3] = obj.isNull("telefone") ? "Indefinido" : obj.getString("telefone");
                 dados[i][4] = obj.isNull("turma_id") ? "Indefinida" : obj.getInt("turma_id");
-                dados[i][5] = "..."; 
-                dados[i][6] = "..."; 
+                dados[i][5] = "editar"; 
+                dados[i][6] = "excluir"; 
             }
 
             return dados;

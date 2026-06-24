@@ -10,18 +10,19 @@ public class ViewFormAtualizacaoTurma extends JFrame {
 
     private JTextField inputCurso, inputBlocoAtual;
     private int idTurma;
-    private int widthSize = 400, heightSize = 250;
-    
+    private int widthSize = 450, heightSize = 250;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=turma";
+    private String identificacaoTurma;
 
-    public ViewFormAtualizacaoTurma(int id, String nomeCurso) {
-        super("Atualização de Turma - " + nomeCurso);
+
+    public ViewFormAtualizacaoTurma(int id, String identificacaoTurma) {
+        super("Atualização de Turma - " + identificacaoTurma);
+        this.identificacaoTurma = identificacaoTurma;
         this.idTurma = id;
-        setLayout(new FlowLayout());
-        this.addComponents();
+        setLayout(new BorderLayout(10,10));
         this.setSize(widthSize, heightSize);
         setLocationRelativeTo(null);
-        
+        this.addComponents();
         this.carregarDados(idTurma);
     }
 
@@ -43,15 +44,41 @@ public class ViewFormAtualizacaoTurma extends JFrame {
     public JTextField getInput(int numberColumns) { return new JTextField(numberColumns); }
 
     public void addComponents() {
-        add(this.getLabel("Curso:"));
-        inputCurso = this.getInput(20);
-        add(inputCurso);
+        JLabel titulo = new JLabel("Turma " + this.identificacaoTurma, SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        add(titulo, BorderLayout.NORTH);
 
-        add(this.getLabel("Bloco Atual:"));
-        inputBlocoAtual = this.getInput(10);
-        add(inputBlocoAtual);
+        JPanel painelFormulario = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        add(this.getUpdateButton());
+        gbc.gridx = 0; gbc.gridy = 0;
+        painelFormulario.add(new JLabel("Curso:"), gbc);
+        gbc.gridx = 1;
+        inputCurso = new JTextField(20);
+        painelFormulario.add(inputCurso, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        painelFormulario.add(new JLabel("Bloco:"), gbc);
+        gbc.gridx = 1;
+        inputBlocoAtual = new JTextField(20);
+        painelFormulario.add(inputBlocoAtual, gbc);
+        add(painelFormulario, BorderLayout.CENTER);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
+        JButton btnSubmit = this.getUpdateButton();
+        JButton btnClose = this.getCloseButton();
+        painelBotoes.add(btnSubmit);
+        painelBotoes.add(btnClose);
+        add(painelBotoes, BorderLayout.SOUTH);
+    }
+
+    public JButton getCloseButton() {
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose());
+        return closeButton;
     }
 
     public JButton getUpdateButton() {
@@ -60,7 +87,7 @@ public class ViewFormAtualizacaoTurma extends JFrame {
         updateButton.addActionListener(e -> {
             try {
                 String curso = inputCurso.getText().trim();
-                String blocoStr = inputBlocoAtual.getText().trim();
+                String bloco = inputBlocoAtual.getText().trim();
 
                 if (curso.isEmpty()) {
                     JOptionPane.showMessageDialog(null, 
@@ -73,8 +100,8 @@ public class ViewFormAtualizacaoTurma extends JFrame {
                 JSONObject payload = new JSONObject();
                 payload.put("curso", curso);
                     
-                if (!blocoStr.isEmpty()) {
-                    payload.put("bloco_atual", Integer.parseInt(blocoStr)); 
+                if (!bloco.isEmpty()) {
+                    payload.put("bloco_atual", bloco); 
                 }
 
                 ClientHttp client = new ClientHttp(baseUrl + "&id=" + idTurma, "PUT", payload.toString());

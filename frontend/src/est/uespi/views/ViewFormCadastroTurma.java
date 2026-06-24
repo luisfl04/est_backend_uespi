@@ -75,9 +75,9 @@ public class ViewFormCadastroTurma extends JFrame {
         submitButton.addActionListener(e -> {
             try {
                 String curso = inputCurso.getText().trim();
-                String blocoStr = inputBlocoAtual.getText().trim();
+                String bloco = inputBlocoAtual.getText().trim();
 
-                if (curso.isEmpty() || blocoStr.isEmpty()) {
+                if (curso.isEmpty() || bloco.isEmpty()) {
                     JOptionPane.showMessageDialog(null, 
                         "O campo Curso é obrigatório!", 
                         "Aviso", 
@@ -88,8 +88,8 @@ public class ViewFormCadastroTurma extends JFrame {
                 JSONObject payload = new JSONObject();
                 payload.put("curso", curso);
                 
-                if (!blocoStr.isEmpty()) {
-                    payload.put("bloco_atual", Integer.parseInt(blocoStr)); 
+                if (!bloco.isEmpty()) {
+                    payload.put("bloco_atual", bloco); 
                 }
 
                 ClientHttp client = new ClientHttp(baseUrl, "POST", payload.toString());
