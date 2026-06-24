@@ -8,7 +8,8 @@ import java.awt.*;
 
 public class ViewFormAtualizacaoDisciplina extends JFrame {
 
-    private JTextField inputNome, inputCursoRelacionado, inputBlocoRelacionado;
+    private JTextField inputNome;
+    private JComboBox<String> selectBloco, selectCurso;
     private int idDisciplina;
     private int widthSize = 450, heightSize = 300;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=disciplina";
@@ -26,6 +27,18 @@ public class ViewFormAtualizacaoDisciplina extends JFrame {
         this.carregarDados(idDisciplina);
     }
 
+    public JComboBox<String> getSelectBoxCursos() {
+        String[] cursos = {"", "Sistemas para Internet", "Ciência da Computação"};
+        JComboBox<String> selectBoxCursos = new JComboBox<String>(cursos);
+        return selectBoxCursos;
+    }
+
+    public JComboBox<String> getSelectBoxBlocos() {
+        String[] blocos = {"", "1", "2", "3", "4", "5", "6", "7", "8"};
+        JComboBox<String> selectBoxBlocos = new JComboBox<String>(blocos);
+        return selectBoxBlocos;
+    }
+
     private void carregarDados(int id) {
         try {
             ClientHttp client = new ClientHttp(this.baseUrl + "&id=" + id, "GET");
@@ -33,8 +46,8 @@ public class ViewFormAtualizacaoDisciplina extends JFrame {
             JSONObject responseObject = new JSONObject(response);
             
             inputNome.setText(responseObject.optString("nome", ""));
-            inputCursoRelacionado.setText(responseObject.optString("curso_relacionado", ""));
-            inputBlocoRelacionado.setText(responseObject.optString("bloco_relacionado", ""));
+            selectBloco.setSelectedItem(responseObject.optString("bloco_relacionado", ""));
+            selectCurso.setSelectedItem(responseObject.optString("curso_relacionado"));
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao obter disciplina: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -70,14 +83,14 @@ public class ViewFormAtualizacaoDisciplina extends JFrame {
         gbc.gridx = 0; gbc.gridy = 1;
         painelFormulario.add(new JLabel("Curso:"), gbc);
         gbc.gridx = 1;
-        inputCursoRelacionado = new JTextField(20);
-        painelFormulario.add(inputCursoRelacionado, gbc);
+        selectCurso = this.getSelectBoxCursos();
+        painelFormulario.add(selectCurso, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
         painelFormulario.add(new JLabel("Bloco:"), gbc);
         gbc.gridx = 1;
-        inputBlocoRelacionado = new JTextField(20);
-        painelFormulario.add(inputBlocoRelacionado, gbc);
+        selectBloco = this.getSelectBoxBlocos();
+        painelFormulario.add(selectBloco, gbc);
         add(painelFormulario, BorderLayout.CENTER);
 
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
@@ -94,8 +107,8 @@ public class ViewFormAtualizacaoDisciplina extends JFrame {
         updateButton.addActionListener(e -> {
             try {
                 String nome = inputNome.getText().trim();
-                String curso = inputCursoRelacionado.getText().trim();
-                String bloco = inputBlocoRelacionado.getText().trim();
+                String curso = (String) selectCurso.getSelectedItem();
+                String bloco = (String) selectBloco.getSelectedItem();
 
                 if (nome.isEmpty() || curso.isEmpty() || bloco.isEmpty() ) {
                     JOptionPane.showMessageDialog(null, 

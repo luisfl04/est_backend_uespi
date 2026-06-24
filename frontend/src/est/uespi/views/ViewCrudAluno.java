@@ -28,7 +28,7 @@ public class ViewCrudAluno extends JFrame {
 
     private int widthSize = 900, heightSize = 600; 
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=aluno";
-    private Object[] tituloColunas = {"ID", "Nome", "Email", "Telefone", "ID Turma", "Editar", "Excluir"};
+    private Object[] tituloColunas = {"ID", "Nome", "Email", "Telefone", "Turma", "Editar", "Excluir"};
 
     public ViewCrudAluno() {
         super("Gerenciamento de Alunos");        
@@ -168,11 +168,12 @@ public class ViewCrudAluno extends JFrame {
             
             for(int i = 0; i < arrayJson.length(); i++) {
                 JSONObject obj = arrayJson.getJSONObject(i);
+                String turma_unicode = obj.isNull("turma_id") ? "Indefinida" : obj.getString("curso") + " - " + obj.getString("bloco_atual");
                 dados[i][0] = obj.getInt("id");
                 dados[i][1] = obj.getString("nome");
                 dados[i][2] = obj.getString("email");
                 dados[i][3] = obj.isNull("telefone") ? "Indefinido" : obj.getString("telefone");
-                dados[i][4] = obj.isNull("turma_id") ? "Indefinida" : obj.getInt("turma_id");
+                dados[i][4] = turma_unicode;
                 dados[i][5] = "editar"; 
                 dados[i][6] = "excluir"; 
             }
@@ -240,5 +241,26 @@ public class ViewCrudAluno extends JFrame {
             isPushed = false;
             return label;
         }
+    }
+}
+
+class ItemTurma {
+    // Armazena dados da entidade 'Turma' para disponibilizá-los no formulário.
+    
+    private int id;
+    private String descricao;
+
+    public ItemTurma(int id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return descricao;
     }
 }

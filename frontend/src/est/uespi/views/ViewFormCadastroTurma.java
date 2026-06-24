@@ -8,7 +8,8 @@ import java.awt.*;
 
 public class ViewFormCadastroTurma extends JFrame {
 
-    private JTextField inputCurso, inputBlocoAtual;
+    private JTextField inputBlocoAtual;
+    private JComboBox<String> selectCurso;
     private int widthSize = 450, heightSize = 250;
     
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=turma";
@@ -29,6 +30,12 @@ public class ViewFormCadastroTurma extends JFrame {
         return new JTextField(numberColumns);
     }
 
+    public JComboBox<String> getSelectBoxCursos() {
+        String[] cursos = {"", "Sistemas para Internet", "Ciência da Computação"};
+        JComboBox<String> selectBox = new JComboBox<String>(cursos);
+        return selectBox;
+    }
+
     public void addComponents() {
         JLabel titulo = new JLabel("Cadastro de Turmas", SwingConstants.CENTER);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
@@ -43,8 +50,8 @@ public class ViewFormCadastroTurma extends JFrame {
         gbc.gridx = 0; gbc.gridy = 0;
         painelFormulario.add(new JLabel("Curso:"), gbc);
         gbc.gridx = 1;
-        inputCurso = new JTextField(20);
-        painelFormulario.add(inputCurso, gbc);
+        selectCurso = this.getSelectBoxCursos();
+        painelFormulario.add(selectCurso, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
         painelFormulario.add(new JLabel("Bloco:"), gbc);
@@ -74,7 +81,7 @@ public class ViewFormCadastroTurma extends JFrame {
 
         submitButton.addActionListener(e -> {
             try {
-                String curso = inputCurso.getText().trim();
+                String curso = (String) selectCurso.getSelectedItem();
                 String bloco = inputBlocoAtual.getText().trim();
 
                 if (curso.isEmpty() || bloco.isEmpty()) {
@@ -129,7 +136,7 @@ public class ViewFormCadastroTurma extends JFrame {
         JButton cleanTextButton = new JButton("Limpar campos");
         
         cleanTextButton.addActionListener(e -> {
-            inputCurso.setText("");
+            selectCurso.setSelectedIndex(0);
             inputBlocoAtual.setText("");
         });
 

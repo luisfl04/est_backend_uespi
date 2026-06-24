@@ -8,7 +8,8 @@ import java.awt.*;
 
 public class ViewFormAtualizacaoTurma extends JFrame {
 
-    private JTextField inputCurso, inputBlocoAtual;
+    private JTextField inputBlocoAtual;
+    private JComboBox<String> selectCurso;
     private int idTurma;
     private int widthSize = 450, heightSize = 250;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=turma";
@@ -26,13 +27,18 @@ public class ViewFormAtualizacaoTurma extends JFrame {
         this.carregarDados(idTurma);
     }
 
+    public JComboBox<String> getSelectBoxCursos() {
+        String[] cursos = {"", "Sistemas para Internet", "Ciência da Computação"};
+        JComboBox<String> selectBox = new JComboBox<String>(cursos);
+        return selectBox;
+    }
+
     private void carregarDados(int id) {
         try {
             ClientHttp client = new ClientHttp(this.baseUrl + "&id=" + id, "GET");
             String response = client.request();
             JSONObject responseObject = new JSONObject(response);
-            
-            inputCurso.setText(responseObject.optString("curso", ""));
+            selectCurso.setSelectedItem(responseObject.optString("curso", ""));
             inputBlocoAtual.setText(responseObject.optString("bloco_atual", ""));
         }
         catch (Exception e) {
@@ -57,8 +63,8 @@ public class ViewFormAtualizacaoTurma extends JFrame {
         gbc.gridx = 0; gbc.gridy = 0;
         painelFormulario.add(new JLabel("Curso:"), gbc);
         gbc.gridx = 1;
-        inputCurso = new JTextField(20);
-        painelFormulario.add(inputCurso, gbc);
+        selectCurso = this.getSelectBoxCursos();
+        painelFormulario.add(selectCurso, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
         painelFormulario.add(new JLabel("Bloco:"), gbc);
@@ -86,7 +92,7 @@ public class ViewFormAtualizacaoTurma extends JFrame {
         
         updateButton.addActionListener(e -> {
             try {
-                String curso = inputCurso.getText().trim();
+                String curso = (String) selectCurso.getSelectedItem();
                 String bloco = inputBlocoAtual.getText().trim();
 
                 if (curso.isEmpty()) {

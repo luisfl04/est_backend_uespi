@@ -3,6 +3,8 @@ package est.uespi.views;
 import javax.swing.*;
 
 import est.uespi.client.ClientHttp;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -11,10 +13,12 @@ import java.awt.event.ActionListener;
 
 public class ViewFormAtualizacaoAluno extends JFrame {
 
-    private JTextField inputNome, inputEmail, inputTelefone, inputTurmaId;
+    private JTextField inputNome, inputEmail, inputTelefone;
+    private JComboBox<ItemTurmaUpdate> comboTurma;
     private int idAluno;
     private int widthSize = 450, heightSize = 350;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=aluno";
+    private String turmaUrl = "http://localhost/backend/api/process_request.php?entidade=turma";
     private String nomeAluno;
 
 
@@ -53,6 +57,34 @@ public class ViewFormAtualizacaoAluno extends JFrame {
         return closeButton;
     }
 
+    public JComboBox<ItemTurmaUpdate> getSelectBoxTurmas() {
+        JComboBox<ItemTurmaUpdate> combo = new JComboBox<>();
+        combo.addItem(new ItemTurmaUpdate(0, "Selecione uma turma..."));
+        
+        try {
+            ClientHttp client = new ClientHttp(turmaUrl, "GET");
+            String response = client.request();
+            
+            if(response != null && !response.trim().isEmpty()) {
+                JSONArray arrayTurmas = new JSONArray(response);
+                
+                for(int i = 0; i < arrayTurmas.length(); i++) {
+                    JSONObject obj = arrayTurmas.getJSONObject(i);
+                    int id = obj.getInt("id");
+                    String curso = obj.optString("curso", "Sem curso");
+                    String bloco = obj.optString("bloco_atual", "0");
+                    String descricao = curso + " - Bloco " + bloco; 
+                    combo.addItem(new ItemTurmaUpdate(id, descricao));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar turmas no select: " + e.getMessage());
+        }
+        
+        return combo;
+    }
+
+
     public void addComponents() {
         JLabel titulo = new JLabel("Aluno - " + this.nomeAluno, SwingConstants.CENTER);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
@@ -85,8 +117,8 @@ public class ViewFormAtualizacaoAluno extends JFrame {
         gbc.gridx = 0; gbc.gridy = 3;
         painelFormulario.add(new JLabel("ID da Turma:"), gbc);
         gbc.gridx = 1;
-        inputTurmaId = new JTextField(10);
-        painelFormulario.add(inputTurmaId, gbc);
+        comboTurma = this.getSelectBoxTurmas();
+        painelFormulario.add(comboTurma, gbc);
         add(painelFormulario, BorderLayout.CENTER);
 
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
@@ -106,7 +138,8 @@ public class ViewFormAtualizacaoAluno extends JFrame {
                     String nome = inputNome.getText().trim();
                     String email = inputEmail.getText().trim();
                     String telefone = inputTelefone.getText().trim();
-                    String turmaIdStr = inputTurmaId.getText().trim();
+                    ItemTurmaUpdate turmaSelecionada = (ItemTurmaUpdate) comboTurma.getSelectedItem();
+
 
                     if (nome.isEmpty() || email.isEmpty()) {
                         JOptionPane.showMessageDialog(null, 
@@ -123,8 +156,8 @@ public class ViewFormAtualizacaoAluno extends JFrame {
                     if (!telefone.isEmpty()) {
                         payload.put("telefone", telefone);
                     }
-                    if (!turmaIdStr.isEmpty()) {
-                        payload.put("turma_id", Integer.parseInt(turmaIdStr)); 
+                    if (turmaSelecionada != null && turmaSelecionada.getId() > 0) {
+                        payload.put("turma_id", turmaSelecionada.getId()); 
                     }
 
                     ClientHttp client = new ClientHttp(baseUrl + "&id=" + idAluno, "PUT", payload.toString());
@@ -140,5 +173,26 @@ public class ViewFormAtualizacaoAluno extends JFrame {
             }
         });
         return updateButton;
+    }
+}
+
+class ItemTurmaUpdate {
+    // Armazena dados da entidade 'Turma' para disponibilizá-los no formulário.
+    
+    private int id;
+    private String descricao;
+
+    public ItemTurmaUpdate(int id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return descricao;
     }
 }

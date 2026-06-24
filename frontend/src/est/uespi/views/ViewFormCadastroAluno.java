@@ -2,15 +2,19 @@ package est.uespi.views;
 
 import javax.swing.*;
 import est.uespi.client.ClientHttp;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.awt.*;
 
 
 public class ViewFormCadastroAluno extends JFrame {
 
-    private JTextField inputNome, inputEmail, inputTelefone, inputTurmaId;
+    private JTextField inputNome, inputEmail, inputTelefone;
+    private JComboBox<ItemTurmaNew> comboTurma;
     private int widthSize = 450, heightSize = 400; 
     private String baseURL = "http://localhost/backend/api/process_request.php?entidade=aluno";
+    private String turmaURL = "http://localhost/backend/api/process_request.php?entidade=turma";
     private String method = "POST"; 
 
     
@@ -20,6 +24,33 @@ public class ViewFormCadastroAluno extends JFrame {
         setSize(widthSize, heightSize);
         setLocationRelativeTo(null);
         this.addComponents();
+    }
+
+    public JComboBox<ItemTurmaNew> getSelectBoxTurmas() {
+        JComboBox<ItemTurmaNew> combo = new JComboBox<>();
+        combo.addItem(new ItemTurmaNew(0, "Selecione uma turma..."));
+        
+        try {
+            ClientHttp client = new ClientHttp(turmaURL, "GET");
+            String response = client.request();
+            
+            if(response != null && !response.trim().isEmpty()) {
+                JSONArray arrayTurmas = new JSONArray(response);
+                
+                for(int i = 0; i < arrayTurmas.length(); i++) {
+                    JSONObject obj = arrayTurmas.getJSONObject(i);
+                    int id = obj.getInt("id");
+                    String curso = obj.optString("curso", "Sem curso");
+                    String bloco = obj.optString("bloco_atual", "0");
+                    String descricao = curso + " - Bloco " + bloco; 
+                    combo.addItem(new ItemTurmaNew(id, descricao));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar turmas no select: " + e.getMessage());
+        }
+        
+        return combo;
     }
 
     public void addComponents() {
@@ -52,10 +83,10 @@ public class ViewFormCadastroAluno extends JFrame {
         painelFormulario.add(inputTelefone, gbc);
 
         gbc.gridx = 0; gbc.gridy = 3;
-        painelFormulario.add(new JLabel("ID da Turma:"), gbc);
+        painelFormulario.add(new JLabel("Turma:"), gbc);
         gbc.gridx = 1;
-        inputTurmaId = new JTextField(10);
-        painelFormulario.add(inputTurmaId, gbc);
+        comboTurma = this.getSelectBoxTurmas();
+        painelFormulario.add(comboTurma, gbc);
 
         add(painelFormulario, BorderLayout.CENTER);
 
@@ -76,7 +107,7 @@ public class ViewFormCadastroAluno extends JFrame {
             inputNome.setText("");
             inputEmail.setText("");
             inputTelefone.setText("");
-            inputTurmaId.setText("");
+            comboTurma.setSelectedIndex(0);
         });
 
         return cleanTextButton;
@@ -90,7 +121,7 @@ public class ViewFormCadastroAluno extends JFrame {
                 String nome = inputNome.getText().trim();
                 String email = inputEmail.getText().trim();
                 String telefone = inputTelefone.getText().trim();
-                String turmaIdStr = inputTurmaId.getText().trim();
+                ItemTurmaNew turmaSelecionada = (ItemTurmaNew) comboTurma.getSelectedItem();
 
                 if (nome.isEmpty() || email.isEmpty()) {
                     JOptionPane.showMessageDialog(null, 
@@ -107,8 +138,8 @@ public class ViewFormCadastroAluno extends JFrame {
                 if (!telefone.isEmpty()) {
                     payload.put("telefone", telefone);
                 }
-                if (!turmaIdStr.isEmpty()) {
-                    payload.put("turma_id", Integer.parseInt(turmaIdStr)); 
+                if (turmaSelecionada != null && turmaSelecionada.getId() > 0) {
+                    payload.put("turma_id", turmaSelecionada.getId()); 
                 }
 
                 ClientHttp client = new ClientHttp(baseURL, method, payload.toString());
@@ -125,7 +156,7 @@ public class ViewFormCadastroAluno extends JFrame {
                     inputNome.setText("");
                     inputEmail.setText("");
                     inputTelefone.setText("");
-                    inputTurmaId.setText("");
+                    comboTurma.setSelectedIndex(0);
                     
                 } else if (jsonResponse.has("erro")) {
                     JOptionPane.showMessageDialog(null, 
@@ -157,3 +188,25 @@ public class ViewFormCadastroAluno extends JFrame {
         return closeButton;
     }
 }
+
+class ItemTurmaNew {
+    // Armazena dados da entidade 'Turma' para disponibilizá-los no formulário.
+    
+    private int id;
+    private String descricao;
+
+    public ItemTurmaNew(int id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return descricao;
+    }
+}
+

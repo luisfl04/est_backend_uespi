@@ -8,10 +8,10 @@ import java.awt.*;
 
 public class ViewFormCadastroDisciplina extends JFrame {
 
-    private JTextField inputNome, inputCursoRelacionado, inputBlocoRelacionado;
+    private JTextField inputNome;
     private int widthSize = 450, heightSize = 300;
     private String baseUrl = "http://localhost/backend/api/process_request.php?entidade=disciplina";
-
+    private JComboBox<String> selectBloco, selectCurso;
 
     public ViewFormCadastroDisciplina() {
         super("Cadastro de Disciplinas");
@@ -35,6 +35,18 @@ public class ViewFormCadastroDisciplina extends JFrame {
         return closeButton;
     }
 
+    public JComboBox<String> getSelectBoxCursos() {
+        String[] cursos = {"", "Sistemas para Internet", "Ciência da Computação"};
+        JComboBox<String> selectBoxCursos = new JComboBox<String>(cursos);
+        return selectBoxCursos;
+    }
+
+    public JComboBox<String> getSelectBoxBlocos() {
+        String[] blocos = {"", "1", "2", "3", "4", "5", "6", "7", "8"};
+        JComboBox<String> selectBoxBlocos = new JComboBox<String>(blocos);
+        return selectBoxBlocos;
+    }
+
     public void addComponents() {
         JLabel titulo = new JLabel("Cadastro de Disciplina", SwingConstants.CENTER);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
@@ -56,14 +68,15 @@ public class ViewFormCadastroDisciplina extends JFrame {
         gbc.gridx = 0; gbc.gridy = 1;
         painelFormulario.add(new JLabel("Curso relacionado:"), gbc);
         gbc.gridx = 1;
-        inputCursoRelacionado = new JTextField(20);
-        painelFormulario.add(inputCursoRelacionado, gbc);
+        selectCurso = this.getSelectBoxCursos();
+        painelFormulario.add(selectCurso, gbc);
 
         gbc.gridx = 0; gbc.gridy = 2;
         painelFormulario.add(new JLabel("Bloco(Número):"), gbc);
         gbc.gridx = 1;
-        inputBlocoRelacionado = new JTextField(20);
-        painelFormulario.add(inputBlocoRelacionado, gbc);
+        selectBloco = this.getSelectBoxBlocos();
+        painelFormulario.add(selectBloco, gbc);
+        add(painelFormulario, BorderLayout.CENTER);
         
         add(painelFormulario, BorderLayout.CENTER);
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));        
@@ -82,8 +95,8 @@ public class ViewFormCadastroDisciplina extends JFrame {
         submitButton.addActionListener(e -> {
             try {
                 String nome = inputNome.getText().trim();
-                String curso = inputCursoRelacionado.getText().trim();
-                String bloco = inputBlocoRelacionado.getText().trim();
+                String curso = (String) selectCurso.getSelectedItem();
+                String bloco = (String) selectBloco.getSelectedItem();
 
                 if (nome.isEmpty() || curso.isEmpty() || bloco.isEmpty()) {
                     JOptionPane.showMessageDialog(null, 
@@ -141,8 +154,8 @@ public class ViewFormCadastroDisciplina extends JFrame {
         
         cleanTextButton.addActionListener(e -> {
             inputNome.setText("");
-            inputCursoRelacionado.setText("");
-            inputBlocoRelacionado.setText("");
+            selectBloco.setSelectedIndex(0);
+            selectCurso.setSelectedIndex(0);
         });
 
         return cleanTextButton;
