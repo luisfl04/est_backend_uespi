@@ -1,14 +1,21 @@
 package est.uespi.views;
 
 import est.uespi.client.ClientHttp;
+
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -26,7 +33,7 @@ public class ViewCrudProfessor extends JFrame {
 
     public ViewCrudProfessor() {
         super("Gerenciamento de Professores");
-        setLayout(new FlowLayout());
+        setLayout(new BorderLayout(10, 10));
         setSize(this.widthSize, this.heightSize);
         setLocationRelativeTo(null);
         this.addComponents();
@@ -105,13 +112,52 @@ public class ViewCrudProfessor extends JFrame {
     public Object[] getTitulosColunas() {
         return this.tituloColunas;
     }
+    
+    private JMenuBar criarMenuNavegacao() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menuNavegar = new JMenu("Navegação");
+
+        JMenuItem menuHome = new JMenuItem("Tela Inicial");
+        JMenuItem menuProfessor = new JMenuItem("Professores");
+        JMenuItem menuDisciplina = new JMenuItem("Disciplinas");
+        JMenuItem menuTurma = new JMenuItem("Turmas");
+
+        menuProfessor.addActionListener(e -> { dispose(); new ViewCrudProfessor().setVisible(true); });
+        menuDisciplina.addActionListener(e -> { dispose(); new ViewCrudDisciplina().setVisible(true); });
+        menuTurma.addActionListener(e -> { dispose(); new ViewCrudTurma().setVisible(true); });
+        menuHome.addActionListener(e -> { dispose(); });
+
+
+        menuNavegar.add(menuHome);
+        menuNavegar.addSeparator(); 
+        menuNavegar.add(menuProfessor);
+        menuNavegar.add(menuDisciplina);
+        menuNavegar.add(menuTurma);
+
+        menuBar.add(menuNavegar);
+        return menuBar;
+    }
+
+    public JButton getCloseButton() {
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose()); 
+        return closeButton;
+    }
 
     public void addComponents() {
+        setJMenuBar(this.criarMenuNavegacao());
         JTable tabelaListagem = this.getTabelaListagem();
         JScrollPane barraRolagem = new JScrollPane(tabelaListagem);
-        JButton newObjectButton = this.getNewObjectButton();
-        add(barraRolagem);
-        add(newObjectButton);
+        barraRolagem.setPreferredSize(new Dimension(800, 400));
+        
+        JPanel painelCentral = new JPanel();
+        painelCentral.add(barraRolagem);
+        add(painelCentral, BorderLayout.CENTER);
+
+        JPanel painelBotoes = new JPanel();
+        painelCentral.add(this.getNewObjectButton());
+        painelCentral.add(this.getCloseButton());
+        add(painelBotoes, BorderLayout.SOUTH);
     }
 
     public Object[][] getDados() {
