@@ -157,6 +157,7 @@ public class ViewFormCadastroAluno extends JFrame {
                     inputEmail.setText("");
                     inputTelefone.setText("");
                     comboTurma.setSelectedIndex(0);
+                    dispose();
                     
                 } else if (jsonResponse.has("erro")) {
                     JOptionPane.showMessageDialog(null, 

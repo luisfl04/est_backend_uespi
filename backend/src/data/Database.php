@@ -2,10 +2,10 @@
 
 class Database {
 
-    private static $host = '127.0.0.1';
-    private static $db_name = 'crud_sistema_academico';
-    private static $username = 'luisfl04'; 
-    private static $password = 'Senha123@';     
+    private static $host = 'host_local_aqui';
+    private static $db_name = 'nome_esquema_aqui';
+    private static $username = 'user_ak'; 
+    private static $password = 'senha_aqui';     
     private static $conn = null;
 
     private function __construct() {}

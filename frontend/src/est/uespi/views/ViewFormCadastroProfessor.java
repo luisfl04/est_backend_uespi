@@ -129,6 +129,7 @@ public class ViewFormCadastroProfessor extends JFrame {
                             inputEmail.setText("");
                             inputTelefone.setText("");
                             inputFormacao.setText("");
+                            dispose();                            
                                 
                         } else if (jsonResponse.has("erro")) {
                             JOptionPane.showMessageDialog(null, 

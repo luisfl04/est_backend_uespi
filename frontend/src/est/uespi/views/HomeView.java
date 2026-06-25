@@ -79,10 +79,9 @@ public class HomeView extends JFrame {
 
         JMenu menuAjuda = new JMenu("Obter ajuda");
         JMenuItem menuAjudaManual = new JMenuItem("Manual");
-        JMenuItem menuAjudaLicenca = new JMenuItem("Licença");
+        menuAjudaManual.addActionListener(e -> { new ViewManualUsuario().setVisible(true);});
         menuAjuda.add(menuAjudaManual);
-        menuAjuda.add(menuAjudaLicenca);
-
+        
         menuPrincipal.add(menuGerenciar);
         menuPrincipal.add(menuAjuda);
 
